@@ -1,12 +1,19 @@
+---
+---
 <!DOCTYPE html>
 <html>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utl-8" />
-	<title>{{ page.title }}</title>
-</head>
+{% include header.html %}
 <body>
-
-	{{content}}
-
+<div class="jumbotron text-center">
+	<h1>SKY STATION<small>{{ page.title }}</small></h1>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			{{content}}
+		</div>
+	</div>
+</div>
+{% include footer.html %}
 </body>
 </html>
