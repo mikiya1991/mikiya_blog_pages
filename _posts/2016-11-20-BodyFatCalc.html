@@ -1,0 +1,15 @@
+---
+title: bodyfat calculator
+layout: defalut
+---
+<script src="{{ site.url }}/Chart.js"></script>
+<canvas id="calc"></canvas>
+<script>
+function fat_calc(waist,weight){
+	var a = waist * 0.74;
+	var b =  weight * 0.082 + 44.74;
+	return (a-b)/weight;
+}
+	var ctx = $("#calc").getContext("2d");
+	var fat_chart = new Chart(ctx);
+</script>
