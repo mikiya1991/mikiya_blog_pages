@@ -1,15 +1,81 @@
 ---
 title: 体脂率计算器
-layout: defalut
+layout: default
 ---
-<script src="{{ site.url }}/Chart.js"></script>
-<canvas id="calc"></canvas>
+<div class="container">
+<h2> 体脂率计算器 </h2>
+<div class="row">
+<form class="form col-sm-4" onsubmit="return false;">
+	<div class="form-group"><label for="weight">体重(kg):&nbsp</label><input type="text" class="form-control" id="weight"></div>
+	<div class="form-group"><label for="waist">腰围(cm):&nbsp</label><input type="text" class="form-control" id="waist"></div>
+	<div><button class="btn btn-default">确认</button></div>
+</form>
+<div class="col-sm-8">
+	<canvas id="calc"></canvas>
+</div>
+</div>
+<script src="{{ site.url }}/js/Chart.bundle.min.js"></script>
+<script src="{{ site.url }}/js/utils.js"></script>
 <script>
 function fat_calc(waist,weight){
 	var a = waist * 0.74;
 	var b =  weight * 0.082 + 44.74;
-	return (a-b)/weight;
+	return (a-b)/weight*100;
 }
-	var ctx = $("#calc").getContext("2d");
-	var fat_chart = new Chart(ctx);
+function fat_calc_female(waist,weight){
+	var a = waist * 0.74;
+	var b =  weight * 0.082 + 34.89;
+	return (a-b)/weight*100;
+}
+function onclick(){
+	var w = parseFloat($("input#weight").val());
+	var wa = parseFloat($("input#waist").val());
+	var t_data ={labels:[],datasets:[]};
+    var ar = new Array(30);
+    var ar2 = new Array(30);
+    var color = Chart.helpers.color;
+	if(w && wa){
+		for(var i=0;i<30;i++){
+			ar[i] = fat_calc(wa,i+45);
+            ar2[i] = fat_calc_female(wa,i+45);
+			//console.log(ar[i]);
+			t_data["labels"][i] = i+45;
+		}
+		t_data["datasets"][0] = {
+            backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
+            borderColor: window.chartColors.blue,
+            type: 'line',
+            label:'male',
+            data: ar
+		}
+		t_data["datasets"][1] = {
+            backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
+            borderColor: window.chartColors.red,
+            type: 'line',
+            label:'female',
+            data: ar2
+		}
+        window.m_config["data"] = t_data;
+		if(window.fat_chart){
+			window.fat_chart.update();
+		}
+		else{
+			var ctx = $("#calc").get(0).getContext("2d");
+			window.fat_chart = new Chart(ctx,window.m_config);
+		}
+	}
+}
+window.m_config = {
+	type: "bar",
+	data: null,
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: '体脂率随体重变化图'
+        },
+    }
+}
+window.fat_chart = null;
+$("button").click(onclick);
 </script>

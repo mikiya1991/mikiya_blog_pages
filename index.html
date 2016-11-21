@@ -2,9 +2,11 @@
 layout: default
 title: my blog
 ---
+<div class="container">
 <h2> latest article </h2>
 <ul>
 	{% for post in site.posts %}
 	<li>{{ post.date | date_to_string }}&nbsp<a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
 	{% endfor %}
 </ul>
+</div>
