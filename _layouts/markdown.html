@@ -4,12 +4,25 @@
 <body>
 <style>
 	.bg-1{
-		background: url({{ site.url }}/assets/sky-station.jpg) center 66%;
+		background: url(/assets/sky-station.jpg) center 66%;
+		margin-bottom: 0px;
+	}
+	.navbar{
+		margin-top: 0px;
 	}
 </style>
 <div class="jumbotron bg-1">
 	<h1>&nbsp Sky Station&nbsp<small>blogs of mikiya.memoria</small></h1>
 </div>
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header"><a href="{{ site.url }}" class="navbar-brand">首页</a></div>
+		<ul class="nav navbar-nav">
+			<li class="active"> <a href="{{ page.url }}"> {{ page.title }} </a> </li>
+			<li></li>
+		</ul>
+	</div>
+</nav>
 <div class="container">
 {{ content }}
 </div>
