@@ -15,6 +15,6 @@ title: Hello World
 >更上一层楼。
 
 
-![lion](/assets/lion.jpg) _{{ page.date | date_to_string }}_ 
+<img class="img-responsive" src="/assets/lion.jpg" alt="lion" >
 
-
+_{{ page.date | date_to_string }}_
