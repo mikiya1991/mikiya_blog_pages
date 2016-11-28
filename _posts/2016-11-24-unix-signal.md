@@ -1,5 +1,6 @@
 ---
 title: unix信号
+comments: true
 layout: markdown
 ---
 
