@@ -48,6 +48,7 @@ _本文章来自APUE第十章学习、总结_
     信号的默认动作见APUE{第三版－P251}
 
 #### 各种信号的说明
+
 <table class="table table-bordered">
 	<tr>
 		<th>信号标识</th>
