@@ -3,10 +3,21 @@ layout: default
 title: Sky Station
 ---
 <div class="container">
-<h2> latest article </h2>
-<ul>
-	{% for post in site.posts %}
-	<li>{{ post.date | date_to_string }}&nbsp<a href="{{ post.url }}">{{ post.title }}</a></li>
-	{% endfor %}
-</ul>
+<div class="row">
+	<div class="col-sm-8">
+		<h2>白日依山尽， 黄河入海流。</h2>
+		<h2>欲穷千里目， 更上一层楼。</h2>
+		<br/>
+		<img class="img-responsive" src="/assets/lion.jpg" alt="lion" >
+	</div>
+	<div class="col-sm-4">
+	<h2> latest article </h2>
+	<ul>
+		{% for post in site.posts %}
+		<li>{{ post.date | date_to_string }}&nbsp<a href="{{ post.url }}">{{ post.title }}</a></li>
+		{% endfor %}
+	</ul>
+	</div>
+</div>
+
 </div>
