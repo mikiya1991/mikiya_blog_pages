@@ -76,7 +76,7 @@ _本文章来自APUE第十章学习、总结_
 	<tr><td>SIGTTOU </td><td>后台进程组写控制终端。</td></tr>
 </table>
 
-
+#### 终端作业管理
 在终端环境下，用户按键产生的信号，都是终端驱动产生的，及内核产生。终端中前后台程序的区别是，终端运行的程序一般都是前台程序，此时终端一般不能输入了。但是如果运行命令时在其后加上`&`符号，进程就会切换到后台执行，参见[Shell 前后台进程切换](https://cnbin.github.io/blog/2015/06/15/shell-qian-hou-tai-jin-cheng-qie-huan/)。
 
 切换到后台执行：`Ctrl+z`，挂起前台进程；`bg %[number]`,将其放到后台执行。  
@@ -87,13 +87,47 @@ _本文章来自APUE第十章学习、总结_
 ## Signal函数
 
     #include <signal.h>
-    void (*signal(int signo, void (*func)(int)));
+    typedef void (* pSigalFunc)(int);
+    pSignalFunc signal(int signo, pSignalFunc);
 
 - signo: 信号名。
 - func：
     - 忽略： SIG_IGN
     - 默认： SIG_DFL
-    - 捕捉： 自定义的处理函数。
+    - 捕捉： 自定义的处理函数。返回值void, 参数信号值。
 - 返回值：之前信号处理程序指向的指针。失败返回SIG_ERR。
 
 在终端中启动程序，以及fork出子程序时的注意点，见APUE{p258}。
+
+### 函数指针
+C中函数是一个代码地址， 因此函数指针是指向该地址的一个指针。他们是不同的。
+
+	typedef void (* pfunc)(void); 	//定义一个函数指针类型
+	typedef void func(void);		//定义一个函数类型
+
+	pfunc p1;
+	func *p2;
+	//两者意义相同
+
+	//同时指针可以强制类型转换
+	pfunc p3 = (pfunc)-1;
+	pfunc p4 = (void (*)(void))-1;
+	//两者相同
+
+函数名也是一个函数指针，只不过它是一个**指针常量** 。因为函数就是一个地址，所以函数就是一个函数指针。
+可以认为pfunc 和 func等同（调用和赋值中），但是申明时不等同。
+
+	void Func(){
+		return;
+	}
+	p1 = &Func;
+	p1 = Func;
+	//1合理，2是语法糖
+
+	(*p1)();
+	p1();
+	//两者都可调用函数，1合理，2是语法糖。
+
+详情参见文章[深入理解C语言函数指针](http://www.cnblogs.com/windlaughing/archive/2013/04/10/3012012.html)。
+
+
