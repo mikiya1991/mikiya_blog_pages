@@ -15,7 +15,7 @@ title: Sky Station
 		<img class="img-responsive" src="/assets/lion.jpg" alt="lion" >
 	</div>
 	<div class="col-sm-4">
-	<h2> Latest Articles </h2>
+	<h2> 近期文章 </h2>
 	<ul>
 		{% for post in site.posts %}
 		<li>{{ post.date | date_to_string }}&nbsp;<a href="{{ post.url }}">{{ post.title }}</a></li>
