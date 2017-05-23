@@ -23,19 +23,19 @@
 </div>
 
 <nav class="navbar navbar-default">
-	<div class="container-fluid">
+	<div class="container-fluid" style="margin-right: 10px">
 		<div class="navbar-header"><a href="{{ site.url }}" class="navbar-brand">home</a></div>
 		<ul class="nav navbar-nav">
 			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Blogs <span class="caret"></span></a>
-		        <ul class="dropdown-menu">
+				<ul class="dropdown-menu">
 					{% for post in site.posts %}
 					<li><a href="{{ post.url }}">{{ post.title }}</a></li>
 					{% endfor %}
-		        </ul>
-      		</li>
+				</ul>
+			</li>
 			<li><a href="#">Laboratory</a></li>
 			<li><a href="/about_me.html">About me</a></li>
 		</ul>
-		<a href="/rss.xml" class="btn btn-danger navbar-btn">rss</a>
+		<a href="/rss.xml" class="btn btn-danger navbar-btn navbar-right">rss</a>
 	</div>
 </nav>

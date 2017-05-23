@@ -1,7 +1,7 @@
 ---
 layout: null
 ---
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
 <channel>
     <title>RSS of sky_station</title>
@@ -16,13 +16,14 @@ layout: null
         <link>网站链接</link>
         <url>图片链接</url></span></span>
     </image> -->
+        <!--<description>{{ post.excerpt }}</description>-->
     {% for post in site.posts %}
     <item>
-        <title>{{ post.title }}</title>       
+        <title>{{ post.title }}</title>
         <link>{{ site.url }}{{ post.url }}</link>
-        <description>{{ post.excerpt }}</description>
         <author>anakinlancer@gmail.com</author>
         <pubDate>{{ post.date | date_to_string }}</pubDate>
     </item>
     {% endfor %}
 </channel>
+</rss>
