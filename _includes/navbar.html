@@ -1,0 +1,16 @@
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header"><a href="{{ site.url }}" class="navbar-brand">home</a></div>
+		<ul class="nav navbar-nav">
+			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Blogs <span class="caret"></span></a>
+		        <ul class="dropdown-menu">
+					{% for post in site.posts %}
+					<li><a href="{{ post.url }}">{{ post.title }}</a></li>
+					{% endfor %}
+		        </ul>
+      		</li>
+			<li><a href="#">Laboratory</a></li>
+			<li><a href="#">About me</a></li>
+		</ul>
+	</div>
+</nav>
