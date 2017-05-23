@@ -4,7 +4,10 @@
 <body>
 <style>
 	.bg-1{
-		background: url(/assets/sky-station.jpg) center 66%;
+		background-image: url(/assets/sky-station.jpg);
+		background-size: contain;
+		background-position: center center;
+		padding-top:5%;padding-bottom:5%;
 		margin-bottom: 0px;
 	}
 	.navbar{
@@ -12,7 +15,7 @@
 	}
 </style>
 <div class="jumbotron bg-1">
-	<h1>&nbsp Sky Station&nbsp<small>blogs of mikiya.memoria</small></h1>
+	<h1>&nbsp; Sky Station&nbsp;<small>blogs of mikiya.memoria</small></h1>
 </div>
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
@@ -23,9 +26,12 @@
 		</ul>
 	</div>
 </nav>
+
 <div class="container">
 {{ content }}
-{% include footer.html %}
+<hr>
 </div>
+
+{% include footer.html %}
 </body>
 </html>

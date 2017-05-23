@@ -1,15 +1,24 @@
 <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="https://music.163.com/outchain/player?type=2&id=586728&auto=1&height=66"></iframe> -->
 <style>
 .container-fluid2 {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10%;
+    padding-bottom: 2%;
 }
 .bg-footer {
-    background-color: #6f6f6f;
+    background-image: url(/assets/space-shuttle.jpg);
+    background-position: center center;
+    background-size: cover;
     color: #ffffff;
 }
+.dis-div {
+	padding: 0% 5% 0% 5%;
+	margin-top: 8%;
+}
+
 </style>
-<div id="disqus_thread"></div>
+
+
+<div class="dis-div" id="disqus_thread"></div>
 {% if page.comments %}
 <script>
 var disqus_config = function () {
@@ -25,7 +34,7 @@ s.setAttribute('data-timestamp', +new Date());
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 {% endif %}
+
 <footer class="bg-footer container-fluid2 text-center"> 
-<img src="/assets/space-shuttle.jpg" class="img-circle" alt="space-shuttle" width="150" height="100">
-<p>欲穷千里目，更上一层楼 anakinlancer@gmail.com</p>
+<h3>欲穷千里目，更上一层楼 anakinlancer@gmail.com</h3>
 </footer>

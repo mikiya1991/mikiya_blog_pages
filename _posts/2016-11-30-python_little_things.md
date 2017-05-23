@@ -1,10 +1,10 @@
 ---
-title: python little things
+title: python的一些内部细节
 layout: markdown
 comments: true
 ---
 
-# python中令人费解的小细节
+# python的一些内部细节
 ---------------------------------
 
 ## 在python中获得帮助
