@@ -21,60 +21,52 @@ comments: True
 
 这段代码是一个使用for循环加状态机处理协议字段的示例。处理方式非常别具一格。
 
-		if (peer->data_stat == RTSP_DATA_STAT_WAIT_REQUEST
-			|| peer->data_stat == RTSP_DATA_STAT_WAIT_SUBSEQUENT_DATA) {
+	if (peer->data_stat == RTSP_DATA_STAT_WAIT_REQUEST
+		|| peer->data_stat == RTSP_DATA_STAT_WAIT_SUBSEQUENT_DATA) {
 
-			int i;
-			int stat = RTSP_DATA_STAT_AWAITING_DOLLAR;
-
-			if (peer->recv[0] == '$') {
-				stat = RTSP_DATA_STAT_AWAITING_STREAM_CHANNEL_ID;
-
-				for (i = 1; i < len; i++) {
-					if (stat == RTSP_DATA_STAT_AWAITING_STREAM_CHANNEL_ID)
-						stat = RTSP_DATA_STAT_AWAITING_SIZE1;
-					else if (stat == RTSP_DATA_STAT_AWAITING_SIZE1)
-						stat = RTSP_DATA_STAT_AWAITING_SIZE2;
-					else if (stat == RTSP_DATA_STAT_AWAITING_SIZE2)
-						stat = RTSP_DATA_STAT_AWAITING_PACKET_DATA;
-					else if (stat == RTSP_DATA_STAT_AWAITING_PACKET_DATA) {
-						short size = 0;
-
-						memcpy(&size, &peer->recv[i-2], 2);
-						size = ntohs(size);
-
-						if ((len - i) == size) {
-							peer->data_stat = RTSP_DATA_STAT_PARSING_RTCP;
-
-							return total;
-						} else if ((len - i) > size) {
-							int data_len = len-i-size;
-							peer->data_stat = RTSP_DATA_STAT_WAIT_REQUEST;
-							memcpy(peer->recv, &peer->recv[4+size], data_len);
-							peer->recv_pos = &peer->recv[data_len];
-
-							pe_log(RTSP, AV_LOG_INFO,
-								"rtcp parse again %d, magic 0x%x\n",
-								data_len, peer->recv[0]);
-
-							if (peer->recv[0] == '$') {
-								stat = RTSP_DATA_STAT_AWAITING_STREAM_CHANNEL_ID;
-								len = data_len;
-								i = 0;
-							} else
-								break;
-						}
+		int i;
+		int stat = RTSP_DATA_STAT_AWAITING_DOLLAR;
+		if (peer->recv[0] == '$') {
+			stat = RTSP_DATA_STAT_AWAITING_STREAM_CHANNEL_ID;
+			for (i = 1; i < len; i++) {
+				if (stat == RTSP_DATA_STAT_AWAITING_STREAM_CHANNEL_ID)
+					stat = RTSP_DATA_STAT_AWAITING_SIZE1;
+				else if (stat == RTSP_DATA_STAT_AWAITING_SIZE1)
+					stat = RTSP_DATA_STAT_AWAITING_SIZE2;
+				else if (stat == RTSP_DATA_STAT_AWAITING_SIZE2)
+					stat = RTSP_DATA_STAT_AWAITING_PACKET_DATA;
+				else if (stat == RTSP_DATA_STAT_AWAITING_PACKET_DATA) {
+					short size = 0;
+					memcpy(&size, &peer->recv[i-2], 2);
+					size = ntohs(size);
+					if ((len - i) == size) {
+						peer->data_stat = RTSP_DATA_STAT_PARSING_RTCP;
+						return total;
+					} else if ((len - i) > size) {
+						int data_len = len-i-size;
+						peer->data_stat = RTSP_DATA_STAT_WAIT_REQUEST;
+						memcpy(peer->recv, &peer->recv[4+size], data_len);
+						peer->recv_pos = &peer->recv[data_len];
+						pe_log(RTSP, AV_LOG_INFO,
+							"rtcp parse again %d, magic 0x%x\n",
+							data_len, peer->recv[0]);
+						if (peer->recv[0] == '$') {
+							stat = RTSP_DATA_STAT_AWAITING_STREAM_CHANNEL_ID;
+							len = data_len;
+							i = 0;
+						} else
+							break;
 					}
 				}
-
-				if ((stat > RTSP_DATA_STAT_AWAITING_DOLLAR)
-					&& (stat <= RTSP_DATA_STAT_AWAITING_PACKET_DATA)) {
-					subseq = 1;
-					pe_log(RTSP, AV_LOG_INFO,
-						"rtcp wait subsequent data, stat %d\n", stat);
-				}
+			}
+			if ((stat > RTSP_DATA_STAT_AWAITING_DOLLAR)
+				&& (stat <= RTSP_DATA_STAT_AWAITING_PACKET_DATA)) {
+				subseq = 1;
+				pe_log(RTSP, AV_LOG_INFO,
+					"rtcp wait subsequent data, stat %d\n", stat);
 			}
 		}
+	}
 
 平时处理时，都是按字节长度扫描。这段也是扫描，但是使用了状态机的方式，for加上状态变换，使得下面的代码区域自然成了一个状态处理区域。
 
