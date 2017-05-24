@@ -1,6 +1,9 @@
 excerpt_separator: <!--more-->
 collections:
-  my_conllection:
+  my_collection:
     layout: page
+  lab:
+    layout: markdown
+    output: true
 
 url: https://mikiya1991.github.io

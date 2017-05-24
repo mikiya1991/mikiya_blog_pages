@@ -41,7 +41,14 @@
 					{% endfor %}
 				</ul>
 			</li>
-			<li><a href="#">Laboratory</a></li>
+			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Laboratory <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					{% for post in site.lab %}
+					<li><a href="{{ post.url }}">{{ post.title }}</a></li>
+					{% endfor %}
+				</ul>
+			</li>
+			<li><a href="#">XiaCheDan</a></li>
 			<li><a href="/about_me.html">About me</a></li>
 		</ul>
 		<a href="/rss.xml" class="btn btn-danger navbar-btn navbar-right">订阅rss</a>
