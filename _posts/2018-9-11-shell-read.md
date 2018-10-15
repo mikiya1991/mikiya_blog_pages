@@ -1,17 +1,23 @@
 ---
-title: read
+title: read命令
 layout: markdown
 comments: true
 keyword: read, shell script, IFS, here doc
 ---
 
-# read
+# read命令
 
-read是shell script的内建的(builtin)的从文件读入数据的命令。
+read是shell script的内建的(builtin)的文件数据处理的命令。
+
+它操作简单，对比
+sed和awk不需要记忆处理代码。它只需要指定行**分隔符、单词的分隔符**就可以了。
+
+- `-d`选项指定行分隔符
+- `IFS`指定单词的分隔符
 
 read从文件中按行读取数据到shell中的变量。
 
-read命令格式：
+**read命令格式：**
 `read [options] [var_name1 var_name2...] [<filename]`
 
 - read从stdin（fid=1）按行读入数据，并解析到`var_names`。
@@ -21,6 +27,8 @@ read命令格式：
 
 
 ## 基本的例子
+
+### 指定不同数量变量，read的结果
 read_test.txt 第一行为`1 2`。read就从标准输入读入一行赋值给了a b。
 
 `IFS`默认为空格、tab、换行的空白符。所以正好a、b各自为1、2
@@ -49,6 +57,7 @@ read_test.txt 第一行为`1 2`。read就从标准输入读入一行赋值给了
 
 ```
 
+### while read读出整个文件
 通过`while read`读出整个文件的内容
 **read.sh:**
 ```bash
@@ -56,7 +65,7 @@ read_test.txt 第一行为`1 2`。read就从标准输入读入一行赋值给了
 
 while read a b; do
 	echo "a:$a b:$b"
-done < read_test.txt
+done<read_test.txt
 
 ```
 
@@ -102,11 +111,12 @@ done 3<read_test.txt 4<read_test2.txt
 ```
 这样read_test.txt第一行`1 2 3`被读入到数组a中。
 
-## read的重要点
 
-### 1. 不要通过管道处理程序的输出
+## read命令中的陷阱
 
-如果通过管道read一个程序的输出到shell变量，你会发现得到的变量值都是空！！  
+### 1. 脚本中不要通过管道处理程序的输出
+
+如果通过管道read一个程序的输出到shell变量，**你会发现得到的变量值都是空！！**
 
 做以下的实验  
 编辑**read.sh**如下，运行
@@ -168,4 +178,3 @@ a:1 b:2
 `IFS`是shell script中十分重要的内建变量，许多的command都受到它的影响，包括`read` `for`。
 
 `IFS`规定了变量的值如何被解释。
-
