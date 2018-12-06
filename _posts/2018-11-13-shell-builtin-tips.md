@@ -24,11 +24,11 @@ env | grep foo
 ```
 上面的例子，你会发现shell变量中有foo，但是环境变量中没有foo。
 
-而shell变量只对当前进程有效，对子进程无效；所以可能你以为有效的Makefile或者工具却不能拿到你的变量值。
+而shell变量只对当前进程有效，__对子进程无效、对子进程无效、对子进程无效__；所以可能你以为有效的Makefile或者工具却不能拿到你的变量值。
 
 #### 设置一个环境变量
 
-设置环境变量最好的办法就是，在~/.bashrc中`export foo="hello world"`导出变量到整个session 环境中。
+设置环境变量最好的办法就是，在`~/.bashrc`中`export foo="hello world"`导出变量到整个session 环境中。
 
 export命令就是将变量导入到环境变量中。
 

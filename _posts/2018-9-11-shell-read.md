@@ -10,7 +10,7 @@ keyword: read, shell script, IFS, here doc
 read是shell script的内建的(builtin)的文件数据处理的命令。
 
 它操作简单，对比
-sed和awk不需要记忆处理代码。它只需要指定行**分隔符、单词的分隔符**就可以了。
+sed和awk不需要记忆处理代码。它只需要指定行**分隔符、单词的分隔符** 就可以了。
 
 - `-d`选项指定行分隔符
 - `IFS`指定单词的分隔符
