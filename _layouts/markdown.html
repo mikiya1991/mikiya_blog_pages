@@ -5,10 +5,24 @@
 {% include navbar.html %}
 
 <div class="container">
-{{ content }}
-<hr>
-</div>
 
+<a class="post-link" href="{{ page.url | relative_url }}">
+	<h2 class="post-title">{{ page.title | escape }}</h2>
+</a>
+<div class="post-meta">
+	<ul class="post-categories">
+		{%- for tag in page.tags -%}
+		<li>{{ tag }}</li>
+		{%- endfor -%}
+	</ul>
+	<div class="post-date"><i class="icon-calendar"></i>{{ page.date | date: "%b %-d, %Y"}}</div>
+</div>
+</br>
+<div class="post">
+	{{ content }}
+</div>
+</div>
+<hr>
 {% include footer.html %}
 </body>
 </html>

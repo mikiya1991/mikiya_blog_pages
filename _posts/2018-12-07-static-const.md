@@ -1,11 +1,9 @@
 ---
-title: c语言中的static、const关键字
+title: "c语言中的static、const关键字"
 layout: markdown
 comments: true
-keyword: static, const, c语言
+categories: static const c
 ---
-
-# c语言中的static和const关键字
 
 例如局部的字符：
 ```c
@@ -14,15 +12,17 @@ int func() {
 }
 ```
 
-定义了一个局部静态的字符串`str`。
+定义了一个局部静态的字符串`str`。那这几个static，const是起了什么作用呢？
 
 ## const
 
 `char *str`是一个名叫str的char \*（char指针）。 `*`之前的char代表指针指向的内容的类型，之后的str代表指针的名字。
 
-如果const在`*`之前，则const修饰的是指针指向的类型；const在`*`之后，则修饰的是指针本身。  
-所以const在`*`之前就表示str指向的内容char不可变。即“abcd”不可以被修改。  
-const在`*`之后便是str指针本身的值不可以改变，即是str不能指向别的字符串。
+- 如果const在`*`之前，则const修饰的是指针指向的类型
+- const在`*`之后，则修饰的是指针本身
+
+所以const在`*`之前就表示str指向的 *内容不可变* 。即“abcd”不可以被修改。  
+const在`*`之后便是str *指针本身不可以改变*，指针指向不能变，即是str不能指向别的字符串。
 
 参考[C语言中const关键字的用法](https://blog.csdn.net/xingjiarong/article/details/47282255)
 

@@ -1,25 +1,15 @@
 ---
-title: ubus api 使用指南
-layout: markdown
+layout: markdown	
+title: "ubus api 使用指南"
 comments: true
-keywords: ubus, uloop, openwrt, 进程间通讯, 线程同步
+tags: ubus uloop openwrt 进程间通讯 线程同步
 ---
 
-
-# ubus api 使用指南
-
-----------------------
-
-
-## 1 ubus是openwrt的进程间通讯的库
-
-
-其是libubox的进程间通信扩展。
+ubus是openwrt的进程间通讯(IPC)的库。libubus其是libubox的IPC通信扩展。
 
 libubox是一个C的事件处理库（uloop），可以支持文件、socket的event，支持timeout定时器，支持runqueue运行队列，支持ustream等魔幻操作。
 
 同类型的C事件库还包括libev、libuv、libevent（libev、libuv还有lua扩展，可在lua中使用）。libubus功能相对比较弱，libuv相对是最强的C事件库。
-
 
 
 #### 1.1 ubus api 分为client端和server端
@@ -47,7 +37,6 @@ ubus的server handle的reply包含两个部分，一个是返回的blobdata数�
 多线程使用不加锁是会段错误的。因为内部的事件处理用了ubus context中的同一块msgbuf。多线程使用会同时使用该buffer，导致段错误。
 
 
-
 ## 3 怎样安全的在多线程中使用ubus api
 
 首先ubus的使用可认为包括两部分api。
@@ -60,9 +49,7 @@ ubus的handler中的所有代码 + ubus_send_rly。该类型代码跑在uloop的
 不可以多线程，不支持多线程操作。因为server端的callback是uloop中处理，根本上是没有办法加锁的，所以server端的handle代码，天生不能多线程。
 
 
-
 但是可以使用 deferd_request在另外的线程中处理，最后用 uloop_timeout 让handle的线程回复。这种魔幻的操作。
-
 
 
 #### client 端api：
@@ -75,8 +62,7 @@ client端api是没有跑在uloop中的（没有ubus_add_uloop就不在uloop中�
 所以client端api可以通过加锁实现多线程安全的使用。
 
 
-
-#### server端api和client端api可不可以一起使用？：
+#### server端api和client端api可不可以一起使用？
 
 
 **答案是可以**
@@ -91,7 +77,6 @@ client端api是没有跑在uloop中的（没有ubus_add_uloop就不在uloop中�
 
 
 > 注意：某些调用非常频繁的ubus，建议单独使用client的context。因为实际的使用时候有现象表明，其他的ubus的invoke可能会被某个占用很高的ubus invoke卡住（加锁导致的）
-
 
 
 ### 4 将复杂的ubus任务交给其他线程来做

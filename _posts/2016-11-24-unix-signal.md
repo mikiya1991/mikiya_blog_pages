@@ -1,12 +1,9 @@
 ---
-title: unix信号
+title: "unix信号"
 comments: true
 layout: markdown
 ---
 
-unix信号——初步
-====================
---------------------
 _本文章来自APUE第十章学习、总结_
 
 ## 1. 概念
