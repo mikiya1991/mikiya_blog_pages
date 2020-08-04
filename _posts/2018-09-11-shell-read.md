@@ -2,7 +2,7 @@
 title: "read命令"
 layout: markdown
 comments: true
-categories: read shell-script shell-IFS here-doc
+tags: read shell-script shell-IFS here-doc
 ---
 
 read是shell script的内建的(builtin)的文件数据处理的命令。

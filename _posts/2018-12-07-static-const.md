@@ -2,7 +2,7 @@
 title: "c语言中的static、const关键字"
 layout: markdown
 comments: true
-categories: static const c
+tags: static const c
 ---
 
 例如局部的字符：

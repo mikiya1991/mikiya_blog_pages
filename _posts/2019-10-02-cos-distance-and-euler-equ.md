@@ -135,7 +135,6 @@ $$
 但是欧拉公式什么意思，究竟表达了什么关系？欧拉公式怎么推导？这个我们以后再说吧
 
 
-
 [1]: https://zh.wikipedia.org/wiki/%E4%BD%99%E5%BC%A6%E7%9B%B8%E4%BC%BC%E6%80%A7
 [2]: https://zh.wikipedia.org/wiki/%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0
 [3]: https://zh.wikipedia.org/wiki/%E6%AC%A7%E6%8B%89%E5%85%AC%E5%BC%8F

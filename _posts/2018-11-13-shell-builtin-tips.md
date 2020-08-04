@@ -2,7 +2,7 @@
 title: "shell环境变量与shell变量"
 layout: markdown
 comments: true
-categories: shell变量 shell环境变量 setenv export
+tags: shell变量 shell环境变量 setenv export
 ---
 
 UNIX中有两种变量，环境变量和shell变量，参见[UNIX中的变量](http://www.ee.surrey.ac.uk/Teaching/Unix/unix8.html)。 shell变量只对当前的进程有效，它被用来设置短期的工作环境。 环境变量则是在login登陆后就一直存在，会对整个会话起作用。环境变量一般大写，shell变量一般小写。
