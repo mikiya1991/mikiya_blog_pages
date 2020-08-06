@@ -36,7 +36,34 @@ ubus的server handle的reply包含两个部分，一个是返回的blobdata数�
 
 ubus的handler中的所有代码 + ubus_send_rly。该类型代码跑在uloop的文件fd事件的callback函数中，由uloop单线程处理。 __不可以多线程，不支持多线程操作__。因为server端的callback是uloop中处理，根本上是没有办法加锁的，所以server端的handle代码，天生不能多线程。
 
-但是可以使用 deferd_request在另外的线程中处理，最后用 uloop_timeout 让handle的线程回复。这种魔幻的操作。
+如下源码， 一旦将ubus_add_uloop后，远程代码调用内部func是在uloop中处理的。 
+如果要加锁，需要在`ubus_handle_data`内加锁，防止其不安全的方位msgbuf。除非修改ubus源码，更换uloop callback, 加锁访问msgbuf。但是这是外部代码做不到的。
+
+```c
+int ubus_connect_ctx(struct ubus_context *ctx, const char *path)
+{
+	uloop_init();
+	memset(ctx, 0, sizeof(*ctx));
+
+	ctx->sock.fd = -1;
+	ctx->sock.cb = ubus_handle_data; //该callback是uloop中自动调用
+	...
+	if (ubus_reconnect(ctx, path)) {
+		free(ctx->msgbuf.data);
+		ctx->msgbuf.data = NULL;
+		return -1;
+	}
+
+	return 0;
+}
+
+static inline void ubus_add_uloop(struct ubus_context *ctx)
+{
+	uloop_fd_add(&ctx->sock, ULOOP_BLOCKING | ULOOP_READ);
+}
+```
+
+但是可以使用 deferd_request在另外的线程中处理，最后用 uloop_timeout 让handle的线程回复，这种魔幻的操作。此例子可以参照example/server.c中`ubus_complete_deferred_request`相关代码。
 
 #### client 端api：
 
@@ -85,6 +112,63 @@ __答案是可以__
 2. 这样存在一个问题，如果uloop已经开始epoll了；而另一线程增加了一个timeout，但是uloop是不知道的；它无法从epoll中退出。  
 3. 但是uloop线程中callback中增加timeout是不会有问题的，因为这些个timeout_set总会在下一次epoll之前。
 
+
+如下面是uloop_run主事件循环代码，每次循环步骤为：
+
+- 获取当前时间， `uloop_process_timeouts`处理超时的timeouts
+- 然后`uloop_handle_processes`，处理已经完成的子进程(run_queue 运行队列相关)
+- 再 `uloop_get_next_timeout` 获得时间最近的一次timeout的间隔， 然后在`uloop_run_events`中epoll这个time。
+
+```c
+int uloop_run(void)
+{
+	...
+	while (!uloop_cancelled)
+	{
+		uloop_gettime(&tv);
+		uloop_process_timeouts(&tv);
+
+		if (do_sigchld)
+			uloop_handle_processes();
+
+		if (uloop_cancelled)
+			break;
+
+		uloop_gettime(&tv);
+		uloop_run_events(uloop_get_next_timeout(&tv));
+	}
+	...
+}
+
+static void uloop_run_events(int timeout)
+{
+	struct uloop_fd_event *cur;
+	struct uloop_fd *fd;
+
+	if (!cur_nfds) {
+		cur_fd = 0;
+		cur_nfds = uloop_fetch_events(timeout); //此函数调用epoll
+		if (cur_nfds < 0)
+			cur_nfds = 0;
+	}
+
+	while (cur_nfds > 0) { //此循环处理fd事件
+		struct uloop_fd_stack stack_cur;
+		unsigned int events;
+
+		...
+		do {
+			stack_cur.events = 0;
+			fd->cb(fd, events); //此处调用自定义的fd callback
+			events = stack_cur.events & ULOOP_EVENT_MASK;
+		} while (stack_cur.fd && events);
+		...
+
+		return;
+	}
+}
+```
+
 这个问题几乎是必然的，所有的事件处理库都无法避免有该问题（包括我之前使用的一个libwebsocket库）。
 所以一般事件库都有一个唤醒epoll的机制，来保证外部线程操作有变化后，通知事件循环处理。
 
@@ -92,3 +176,37 @@ libwebsocket库是使用函数`lws_cannel`API来通知事件循环， uloop内�
 所以最好办法是，参考其内部的`uloop_wake`的方式： 创建一个文件fd，在需要唤醒事件循环时，往其写数据，触发epoll返回。
 
 **使用一个专门用来唤醒uloop的文件符，加入到uloop的pollfd中**，这样在另外的线程中设置了timeout后，往唤醒fd中写一些数据，强行唤醒epoll。
+
+```c
+int waker_init(void)
+{
+	int fds[2];
+
+	if (waker_pipe >= 0)
+		return 0;
+
+	if (pipe(fds) < 0) //pipe 获得一个pipe， fd[1]是用来写的，fd[0]是用来读的
+		return -1;
+
+	waker_init_fd(fds[0]);
+	waker_init_fd(fds[1]);
+	waker_pipe = fds[1];
+
+	waker_fd.fd = fds[0];
+	waker_fd.cb = waker_consume;
+	uloop_fd_add(&waker_fd, ULOOP_READ); //fd[0]增加到uloop中, 这样只要写fd[1] epoll就会唤醒
+
+	return 0;
+}
+
+void uloop_wake(void) //唤醒用函数，直接写fd[1]
+{
+	do {
+		if (write(waker_pipe, "w", 1) < 0) {
+			if (errno == EINTR)
+				continue;
+		}
+		break;
+	} while (1);
+}
+```
